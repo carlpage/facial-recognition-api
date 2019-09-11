@@ -1,11 +1,7 @@
 const jwt = require('jsonwebtoken');
-const token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 
-const handleSignin = (db, bcrypt) => (req, res) => {
-  const {
-    email,
-    password
-  } = req.body;
+const handleSignin = (db, bcrypt, req, res) => {
+  const { email, password } = req.body;
   if (!email || !password) {
     return Promise.reject('incorrect form submission');
   }
@@ -17,16 +13,16 @@ const handleSignin = (db, bcrypt) => (req, res) => {
         return db.select('*').from('users')
           .where('email', '=', email)
           .then(user => user[0])
-          .catch(err => Promise.reject('unable to get user'))
+          .catch(err => res.status(400).json('unable to get user'))
       } else {
-        Promise.reject('wrong credentials')
+        return Promise.reject('wrong credentials');
       }
     })
-    .catch(err => Promise.reject('wrong credentials'))
+    .catch(err => err)
 }
 
 const getAuthTokenId = () => {
-  console.log('HIT getAuthTokenId')
+  console.log('auth OK')
 }
 
 const signToken = (email) => {
