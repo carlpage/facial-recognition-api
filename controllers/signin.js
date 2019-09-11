@@ -30,31 +30,31 @@ const getAuthTokenId = () => {
 }
 
 const signToken = (email) => {
-  console.log('HIT signToken')
+  console.log('HIT signToken', email)
   const jwtPayload = {email};
   // needs environmental variable
-  return jwt.sign(jwtPayload, 'shhhhh');
+  return jwt.sign(jwtPayload, 'JWT SECRET', {expiresIn: '2 days'});
 }
 
 const createSessions = (user) => {
+  // JWT getAuthTokenId, return data
   console.log('HIT createSessions')
   const {email, id} = user;
-  const token = signToken()
-  // JWT getAuthTokenId, return data
+  const token = signToken(email);
+  return {success: 'true', userId: id, token};
 }
 
 const signInAuthentication = (db, bcrypt) => (req, res) => {
   const {authorization} = req.headers;
-  return authorization ? 
-  getAuthTokenId() : 
+  return authorization ? getAuthTokenId() : 
   handleSignin(db, bcrypt, req, res)
     .then(data => {
-      data.id && data.email ? createSessions(data) : Promise.reject(data)
+      return data.id && data.email ? createSessions(data) : Promise.reject(data)
     })
-    .catch(err => res.status(400).json())
+    .then(session => res.json(session))
+    .catch(err => res.status(400).json(err))
 }
 
 module.exports = {
-  handleSignin: handleSignin,
   signInAuthentication: signInAuthentication
 }

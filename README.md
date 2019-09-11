@@ -1,4 +1,4 @@
-# SmartBrain-api - Dockerized
+# facial-recognition-api - Dockerized
 Final project for Udemy course - using Docker
 
 1. Clone this repo
