@@ -1,6 +1,20 @@
 version: '3.6'
 services:
 
+  # Backend
+  smart-brain-api:
+    container_name: backend
+    build: ./
+    volumes:
+      - ./:/usr/src/smart-brain-api
+    command: npm start
+    working_dir: /usr/src/smart-brain-api
+    ports:
+      - "3000:3000"
+    environment:
+      POSTGRES_URI: postgres://admin:password@postgres:5432/smart-brain-docker
+      REDIS_URI: redis://redis:6379
+
   # PostgreSQL
   postgres:
     container_name: postgres
@@ -14,17 +28,11 @@ services:
     ports:
       # 5431 is the local port
       - "5431:5432"
-
-  # Backend
-  smart-brain-api:
-    container_name: backend
-    build: ./
-    volumes:
-      - ./:/usr/src/smart-brain-api
-    command: npm start
-    working_dir: /usr/src/smart-brain-api
+  
+  # I was stuck on a bug where the redis instance was getting connected to another container. If you are having trouble and the host is correct on sigin.js and this redis docker instance is looking correct, you may need to remove all containers and images and build again.
+  # Redis
+  redis:
+    container_name: redis
+    image: redis
     ports:
-      - "3000:3000"
-    environment:
-      POSTGRES_URI: postgres://admin:password@postgres:5432/smart-brain-docker
-
+      - "6379:6379"
