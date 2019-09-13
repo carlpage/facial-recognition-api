@@ -1,3 +1,5 @@
+const createSession = require('./signin').createSession;
+
 const handleRegister = (req, res, db, bcrypt) => {
   const { email, name, password } = req.body;
   if (!email || !name || !password) {
@@ -20,6 +22,7 @@ const handleRegister = (req, res, db, bcrypt) => {
             joined: new Date()
           })
           .then(user => {
+            createSession(user[0]);
             res.json(user[0]);
           })
       })

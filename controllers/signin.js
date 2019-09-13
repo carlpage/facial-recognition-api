@@ -8,7 +8,9 @@ const redisClient = redis.createClient({ host: 'redis' });
 
 const signToken = (username) => {
   const jwtPayload = { username };
-  return jwt.sign(jwtPayload, 'JWT_SECRET_KEY', { expiresIn: '2 days'});
+  return jwt.sign(jwtPayload, process.env.JWT_SECRET_KEY, {
+    expiresIn: '2 days'
+  });
 };
 
 const setToken = (key, value) => Promise.resolve(redisClient.set(key, value));
@@ -16,6 +18,7 @@ const setToken = (key, value) => Promise.resolve(redisClient.set(key, value));
 const createSession = (user) => {
   const { email, id } = user;
   const token = signToken(email);
+  console.log('createSession token', token)
   return setToken(token, id)
     .then(() => {
       return { success: 'true', userId: id, token, user }
@@ -67,5 +70,6 @@ const signinAuthentication = (db, bcrypt) => (req, res) => {
 
 module.exports = {
   signinAuthentication,
-  redisClient
+  redisClient,
+  createSession
 }
