@@ -20,7 +20,7 @@ const handleProfileUpdate = (req, res, db) => {
   const {name, age, pet} = req.body.formInput;
   console.log(name, age, pet)
 
-  if (name) {
+  if (name && name !== '') {
     db('users')
       .where({id})
       .update({name})
@@ -31,10 +31,10 @@ const handleProfileUpdate = (req, res, db) => {
           res.send(400).json("unable to update name");
         }
       })
-      .catch(err => res.status(400).json('error updating user name'));
+      .catch(err => res.status(400).json('error updating name'));
   } 
 
-  if (age) {
+  if (age && age !== '') {
     console.log('HIT age')
     db('users')
       .where({id})
@@ -46,10 +46,10 @@ const handleProfileUpdate = (req, res, db) => {
           res.send(400).json("unable to update age");
         }
       })
-      .catch(err => res.status(400).json('error updating user age'));
+      .catch(err => res.status(400).json('error updating age'));
   } 
 
-  if (pet) {
+  if (pet && pet !== '') {
     console.log('HIT pet')
     db('users')
       .where({id})
@@ -61,7 +61,7 @@ const handleProfileUpdate = (req, res, db) => {
           res.send(400).json("unable to update pet");
         }
       })
-      .catch(err => res.status(400).json('error updating user pet'));
+      .catch(err => res.status(400).json('error updating pet'));
   }
 }
 

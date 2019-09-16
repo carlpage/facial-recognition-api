@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
+const compression = require('compression');
 const knex = require('knex');
 const morgan = require('morgan');
 require('dotenv').config();
@@ -18,10 +19,23 @@ const db = knex({
   connection: process.env.POSTGRES_URI
 });
 
+// only allow requests from these urls
+const whitelist = ['http://localhost:3000', 'http://localhost:3001']
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
 const app = express();
 
 app.use(morgan('combined'));
-app.use(cors())
+app.use(cors(corsOptions));
+app.use(compression());
 app.use(bodyParser.json());
 
 app.post('/signin', signin.signinAuthentication(db, bcrypt))

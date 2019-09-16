@@ -18,7 +18,6 @@ const setToken = (key, value) => Promise.resolve(redisClient.set(key, value));
 const createSession = (user) => {
   const { email, id } = user;
   const token = signToken(email);
-  console.log('createSession token', token)
   return setToken(token, id)
     .then(() => {
       return { success: 'true', userId: id, token, user }
@@ -62,8 +61,7 @@ const signinAuthentication = (db, bcrypt) => (req, res) => {
   console.log('authorization', authorization)
   return authorization ? getAuthTokenId(req, res)
     : handleSignin(db, bcrypt, req, res)
-    .then(data =>
-      data.id && data.email ? createSession(data) : Promise.reject(data))
+    .then(user => user.id && user.email ? createSession(user) : Promise.reject(user))
     .then(session => res.json(session))
     .catch(err => res.status(400).json(err));
 }

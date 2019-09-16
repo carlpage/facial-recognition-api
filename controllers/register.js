@@ -22,7 +22,7 @@ const handleRegister = (req, res, db, bcrypt) => {
             joined: new Date()
           })
           .then(user => {
-            createSession(user[0]);
+            // createSession(user[0]).then;
             res.json(user[0]);
           })
       })
@@ -33,5 +33,5 @@ const handleRegister = (req, res, db, bcrypt) => {
 }
 
 module.exports = {
-  handleRegister: handleRegister
+  handleRegister
 };
