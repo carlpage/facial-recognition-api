@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run: echo "npm installing"
       - run: npm install
-      - run: CI=true npm run build
+      - run: CI=true npm start
   test:
     docker:
       - image: circleci/node:8.9
@@ -31,4 +31,3 @@ workflows:
       - test:
           requires:
             - hithere
-
