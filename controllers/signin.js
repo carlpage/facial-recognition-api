@@ -23,7 +23,7 @@ const createSession = (user) => {
     .then(() => {
       return { success: 'true', userId: id, token, user }
     })
-    .catch(console.log('ERROR setToken'));
+    .catch(console.error('ERROR setToken'));
 };
 
 const handleSignin = (db, bcrypt, req, res) => {
@@ -45,7 +45,7 @@ const handleSignin = (db, bcrypt, req, res) => {
       }
     })
     .catch(err => err)
-}
+};
 
 const getAuthTokenId = (req, res) => {
   const { authorization } = req.headers;
